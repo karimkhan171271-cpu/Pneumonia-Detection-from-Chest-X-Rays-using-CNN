@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pneumonia Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        <h1>Pneumonia Detection System</h1>
+        <p>Upload your chest X-ray image below to check for pneumonia</p>
+        
+        <form action="/predict" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" id="imageUpload" onchange="previewImage(event)" required>
+            <div id="preview-box">
+                <img id="preview" src="#" alt="Image Preview" style="display: none;">
+            </div>
+            <button type="submit">🩺 Diagnose</button>
+        </form>
+
+        {% if prediction %}
+            <div class="result {{ 'positive' if 'Pneumonia' in prediction else 'negative' }}">
+                {{ prediction }} <br>
+                <strong>Probability: {{ percentage }}%</strong>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function previewImage(event) {
+            const preview = document.getElementById('preview');
+            preview.src = URL.createObjectURL(event.target.files[0]);
+            preview.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
